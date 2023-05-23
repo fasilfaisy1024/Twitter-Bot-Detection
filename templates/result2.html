@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <title>Bot Detect</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+
+    <!-- Favicons -->
+    <link href={{ url_for('static', filename="assets/img/favicon.png" )}} rel="icon">
+    <link href={{ url_for('static', filename="assets/img/apple-touch-icon.png" )}} rel="apple-touch-icon">
+
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+        rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href={{ url_for('static', filename="assets/vendor/animate.css/animate.min.css" )}} rel="stylesheet">
+    <link href={{ url_for('static', filename="assets/vendor/aos/aos.css" )}} rel="stylesheet">
+    <link href={{ url_for('static', filename="assets/vendor/bootstrap/css/bootstrap.min.css" )}} rel="stylesheet">
+    <link href={{ url_for('static', filename="assets/vendor/bootstrap-icons/bootstrap-icons.css" )}} rel="stylesheet">
+    <link href={{ url_for('static', filename="assets/vendor/boxicons/css/boxicons.min.css" )}} rel="stylesheet">
+    <link href={{ url_for('static', filename="assets/vendor/glightbox/css/glightbox.min.css" )}} rel="stylesheet">
+    <link href={{ url_for('static', filename="assets/vendor/remixicon/remixicon.css" )}} rel="stylesheet">
+    <link href={{ url_for('static', filename="assets/vendor/swiper/swiper-bundle.min.css" )}} rel="stylesheet">
+
+    <!-- Template Main CSS File -->
+    <link href={{ url_for('static', filename="assets/css/style.css" )}} rel="stylesheet">
+    <style>
+        #loader {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+        }
+
+        #loader::after {
+            content: "";
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 5px solid #ffffff;
+            border-top-color: #3498db;
+            animation: spin 1s infinite linear;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+    <script>
+        function send_mail() {
+            $.ajax({
+                url: "/send_mail",
+                type: "post",
+                data: { uname: '{{ uname }}' },
+                beforeSend: function () {
+                    document.getElementById("loader").style.display = "flex";
+                },
+                success: function (res) {
+                    console.log(res);
+                    if (res == 's') {
+                        window.alert("Mail sent Successfully")
+                        window.location.replace('/index');
+                    }
+                    else {
+                        window.alert("Some issue sending mail")
+                        window.location.replace('/index');
+                    }
+                }
+            });
+        }
+    </script>
+</head>
+
+<body>
+    <div id="loader"></div>
+    <!-- ======= Header ======= -->
+    <header id="header" class="fixed-top d-flex align-items-center ">
+        <div class="container d-flex align-items-center justify-content-between">
+
+            <div class="logo">
+                <h1><a href={{ url_for('index') }}>Bot or Not !</a></h1>
+                <!-- Uncomment below if you prefer to use an image logo -->
+                <!-- <a href="index.html"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
+            </div>
+
+            <nav id="navbar" class="navbar">
+                <ul>
+                    <li><a class="nav-link scrollto " href={{ url_for('index' )}}>Home</a></li>
+
+                </ul>
+                <i class="bi bi-list mobile-nav-toggle"></i>
+            </nav><!-- .navbar -->
+
+        </div>
+    </header><!-- End Header -->
+
+    <main id="main">
+
+        <!-- ======= Breadcrumbs ======= -->
+        <section class="breadcrumbs">
+            <div class="container">
+
+                <div class="d-flex justify-content-between align-items-center">
+                    <h2>Result</h2>
+                    <ol>
+                        <li><a href={{ url_for('index' )}}>Home</a></li>
+                        <li>Result</li>
+                    </ol>
+                </div>
+
+            </div>
+        </section><!-- End Breadcrumbs -->
+
+        <section class="inner-page">
+            <div class="container">
+                <section id="contact" class="contact">
+                    <div class="container">
+
+
+
+                        <div class="row mt-5">
+                            <div class="col-lg-6 mt-5 mt-lg-0 aos-init aos-animate" data-aos="fade-left"
+                                style="display: block;margin: 20px auto;">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h1>
+                                            {% if rslt==0 %}
+                                            Non Bot
+                                            {% elif rslt==1 %}
+                                            Bot
+                                            {% endif %}
+                                        </h1><br><br>
+                                        <a class="btn btn-primary" href="https://twitter.com/{{ uname }}"
+                                            target="_blank">Visit
+                                            Profile</a>
+                                        {% if rslt==1 %}
+                                        <a class="btn btn-primary" href="javascript:;" onclick="send_mail()">Report</a>
+                                        {% endif %}
+
+                                    </div>
+                                    <div class="col-md-6">
+                                        {% if rslt==0 %}
+                                        <img style="height:300px;width:auto;" src={{ url_for('static',
+                                            filename="assets/img/human 2.gif" )}}>
+                                        {% elif rslt==1 %}
+                                        <img style="height:300px;width:auto;" src={{ url_for('static',
+                                            filename="assets/img/robot_waving.gif" )}}>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <u><h3>Account Details</h3></u>
+                                <table cellpadding="15px">
+                                    <tr>
+                                        <td>screen_name</td>
+                                        <td>{{ df[0] }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>followers_count</td>
+                                        <td>{{ df[1] }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>friends_count</td>
+                                        <td>{{ df[2] }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>listed_count</td>
+                                        <td>{{ df[3] }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>verified</td>
+                                        <td>{{ df[4] }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>description</td>
+                                        <td>{{ df[5] }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>statuses_count</td>
+                                        <td>{{ df[6] }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>name</td>
+                                        <td>{{ df[7] }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>status</td>
+                                        <td
+                                            style="max-width:40px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
+                                            {{ df[8] }}</td>
+                                    </tr>
+                                </table>
+
+
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </section>
+            </div>
+        </section>
+
+    </main><!-- End #main -->
+
+    <!-- ======= Footer ======= -->
+    <footer id=" footer">
+        <div class="container">
+            <h3>Bot or Not !</h3>
+            <p>Detect twitter bot.</p>
+            <div class="social-links">
+                <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
+                <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
+                <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
+                <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
+                <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
+            </div>
+            <div class="copyright">
+                &copy; Copyright <strong><span>Bot or Not !</span></strong>. All Rights
+                Reserved
+            </div>
+            <div class="credits">
+                <!-- All the links in the footer should remain intact. -->
+                <!-- You can delete the links only if you purchased the pro version. -->
+                <!-- Licensing information: https://bootstrapmade.com/license/ -->
+                <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/selecao-bootstrap-template/ -->
+                Designed by <a href="">Fasil</a>
+            </div>
+        </div>
+    </footer><!-- End Footer -->
+
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
+            class="bi bi-arrow-up-short"></i></a>
+
+    <!-- Vendor JS Files -->
+    <script src={{ url_for('static', filename="assets/vendor/aos/aos.js" )}}></script>
+    <script src={{ url_for('static', filename="assets/vendor/bootstrap/js/bootstrap.bundle.min.js" )}}></script>
+    <script src={{ url_for('static', filename="assets/vendor/glightbox/js/glightbox.min.js" )}}></script>
+    <script src={{ url_for('static', filename="assets/vendor/isotope-layout/isotope.pkgd.min.js" )}}></script>
+    <script src={{ url_for('static', filename="assets/vendor/swiper/swiper-bundle.min.js" )}}></script>
+    <script src={{ url_for('static', filename="assets/vendor/php-email-form/validate.js" )}}></script>
+
+    <!-- Template Main JS File -->
+    <script src={{ url_for('static', filename="assets/js/main.js" )}}></script>
+    <script src={{ url_for('static', filename="assets/js/jquery.min.js" )}}></script>
+
+</body>
+
+</html>
